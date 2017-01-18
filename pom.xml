@@ -16,6 +16,7 @@
         <springboot.version>1.4.2.RELEASE</springboot.version>
         <tomcat.version>8.0.36</tomcat.version>
         <keycloak.version>1.9.8.Final</keycloak.version>
+        <keycloak-quickstarts.version>2.5.1.Final-SNAPSHOT</keycloak-quickstarts.version>
     </properties>
 
     <dependencyManagement>
@@ -31,6 +32,13 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.keycloak.quickstarts</groupId>
+            <artifactId>service-springboot</artifactId>
+            <version>${keycloak-quickstarts.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -105,15 +113,36 @@
 
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>org.keycloak.quickstarts</includeGroupIds>
+                            <includeTypes>jar</includeTypes>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!-- executions>
+                <executions>
                     <execution>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
                     </execution>
-                </executions -->
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
