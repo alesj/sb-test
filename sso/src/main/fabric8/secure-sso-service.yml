@@ -1,0 +1,17 @@
+---
+kind: Service
+apiVersion: v1
+spec:
+  ports:
+  - port: 8443
+    targetPort: 8443
+  selector:
+    application: sso
+    component: server
+metadata:
+  name: secure-sso
+  labels:
+    application: sso
+    component: server
+  annotations:
+    description: The web server's https port.

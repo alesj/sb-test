@@ -6,21 +6,40 @@
     <groupId>org.jboss.obsidian</groupId>
     <artifactId>sb-test</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>SB test</name>
     <description>Test project for Spring Boot</description>
 
     <properties>
-        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
         <springboot.version>1.4.2.RELEASE</springboot.version>
         <tomcat.version>8.0.36</tomcat.version>
         <keycloak.version>1.9.8.Final</keycloak.version>
-        <keycloak-quickstarts.version>2.5.1.Final-SNAPSHOT</keycloak-quickstarts.version>
+        <keycloak-quickstarts.version>3.0.0.CR1-SNAPSHOT</keycloak-quickstarts.version>
+        <fabric8.maven.plugin.version>3.1.92</fabric8.maven.plugin.version>
+        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
     </properties>
+
+    <modules>
+        <module>app</module>
+        <module>service</module>
+        <module>sso</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.jboss.obsidian</groupId>
+                <artifactId>sb-test-app</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.obsidian</groupId>
+                <artifactId>sb-test-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-parent</artifactId>
@@ -28,77 +47,20 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.keycloak.quickstarts</groupId>
+                <artifactId>app-springboot</artifactId>
+                <version>${keycloak-quickstarts.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.keycloak.quickstarts</groupId>
+                <artifactId>service-springboot</artifactId>
+                <version>${keycloak-quickstarts.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-
-        <dependency>
-            <groupId>org.keycloak.quickstarts</groupId>
-            <artifactId>service-springboot</artifactId>
-            <version>${keycloak-quickstarts.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-loader</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Tomcat -->
-
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-el</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-websocket</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-
-        <!-- Required to avoid this class not found error
-        Caused by: java.lang.NoClassDefFoundError: org/apache/juli/logging/LogFactory
-            at org.apache.catalina.util.LifecycleBase.<clinit>(LifecycleBase.java:37)
-            at org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory.getEmbeddedServletContainer(TomcatEmbeddedServletContainerFactory.java:167)
-            at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.createEmbeddedServletContainer(EmbeddedWebApplicationContext.java:164)
-            at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:134)
-        -->
-
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-juli</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-artemis</artifactId>
-        </dependency>
-
-        <!-- Testing -->
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
 
     <build>
         <pluginManagement>
@@ -108,54 +70,23 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${springboot.version}</version>
                 </plugin>
+
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>fabric8-maven-plugin</artifactId>
+                    <version>${fabric8.maven.plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <skipTests>true</skipTests>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
-
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeGroupIds>org.keycloak.quickstarts</includeGroupIds>
-                            <includeTypes>jar</includeTypes>
-                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <inherited>true</inherited>
-                <!-- configuration>
-                    <excludes>
-                        <exclude>${test.to.exclude}</exclude>
-                    </excludes>
-                </configuration -->
-            </plugin>
-        </plugins>
     </build>
 
 </project>
