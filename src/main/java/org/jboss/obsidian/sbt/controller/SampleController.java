@@ -53,24 +53,10 @@ public class SampleController {
 		);
 	}
 
-	/**
-	 * Note how the {@link Valid} annotation causes Spring Web MVC to run the given request payload object through
-	 * JSR 303 validation after deserialization and before calling this method. Alternatively you could omit the
-	 * {@code @Valid} annotation, inject a {@link ClientDataValidationService} into this class, and call
-	 * {@link ClientDataValidationService#validateObjectsFailFast(Object...)} passing in the request payload object -
-	 * if it fails validation an appropriate exception would be thrown immediately. Both solutions are
-	 * functionally equivalent.
-	 * <p>
-	 * <p>In this simple case the {@code @Valid} annotation is easier and simpler, but there are some more complex
-	 * use cases where using {@link ClientDataValidationService} yourself ends up being a better (or the only)
-	 * solution.
-	 */
 	@PostMapping(consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	public SampleModel postSampleModel(@Valid @RequestBody SampleModel model) {
-		// Manually check the throwManualError query param (normally you'd do this with JSR 303 annotations on the
-		// object, but this shows how you can manually throw exceptions to be picked up by the error handling system).
 		if (Boolean.TRUE.equals(model.throw_manual_error)) {
 			throw ApiException.newBuilder()
 				.withExceptionMessage("Manual error throw was requested")
