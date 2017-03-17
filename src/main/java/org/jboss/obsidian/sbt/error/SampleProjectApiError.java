@@ -19,13 +19,11 @@ public enum SampleProjectApiError implements ApiError {
 	FIELD_CANNOT_BE_NULL_OR_BLANK(99100, "Field cannot be null or empty", HttpStatus.BAD_REQUEST.value()),
 	// FOO_STRING_CANNOT_BE_BLANK shows how you can build off a base/generic error and add metadata.
 	FOO_STRING_CANNOT_BE_BLANK(FIELD_CANNOT_BE_NULL_OR_BLANK, MapBuilder.builder("field", (Object) "foo").build()),
-	INVALID_RANGE_VALUE(99110, "The range_0_to_42 field must be between 0 and 42 (inclusive)",
-		HttpStatus.BAD_REQUEST.value()),
+	INVALID_RANGE_VALUE(99110, "The range_0_to_42 field must be between 0 and 42 (inclusive)", HttpStatus.BAD_REQUEST.value()),
 	// RGB_COLOR_CANNOT_BE_NULL could build off FIELD_CANNOT_BE_NULL_OR_BLANK like FOO_STRING_CANNOT_BE_BLANK does,
 	//      however this shows how you can make individual field errors with unique code and custom message.
 	RGB_COLOR_CANNOT_BE_NULL(99120, "The rgb_color field must be defined", HttpStatus.BAD_REQUEST.value()),
-	NOT_RGB_COLOR_ENUM(99130, "The rgb_color field value must be one of: " + Arrays.toString(RgbColor.values()),
-		HttpStatus.BAD_REQUEST.value()),
+	NOT_RGB_COLOR_ENUM(99130, "The rgb_color field value must be one of: " + Arrays.toString(RgbColor.values()), HttpStatus.BAD_REQUEST.value()),
 	MANUALLY_THROWN_ERROR(99140, "You asked for an error to be thrown", HttpStatus.INTERNAL_SERVER_ERROR.value()),
 	// This is a wrapper around a core error. It will have the same error code, message, and HTTP status code,
 	//      but will show up in the logs with contributing_errors="SOME_MEANINGFUL_ERROR_NAME", allowing you to
