@@ -16,6 +16,7 @@
 package org.jboss.sbtest.ui;
 
 import org.jboss.sbtest.common.Greeting;
+import org.jboss.sbtest.wingtips.Tracing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ import org.springframework.web.client.RestTemplate;
 public class UiController {
 
 	private UiProperties properties;
-	private RestTemplate client = new RestTemplate();
+	private final RestTemplate client = Tracing.createRestTemplate();
 
 	@Autowired
 	public UiController(UiProperties properties) {
