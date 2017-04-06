@@ -32,7 +32,9 @@ public class WingtipsConfiguration {
 				new WingtipsToZipkinLifecycleListener(
 					zipkinProperties.getServiceName(),
 					zipkinProperties.getLocalComponentNamespace(),
-					zipkinProperties.getBaseUrl()));
+					zipkinProperties.getBaseUrl()
+				)
+			);
 		}
 	}
 
