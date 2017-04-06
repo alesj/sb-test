@@ -18,7 +18,6 @@ package org.jboss.sbtest.ui;
 import org.jboss.sbtest.common.Greeting;
 import org.jboss.sbtest.wingtips.Tracing;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +37,7 @@ public class UiController {
 	@RequestMapping("/go")
 	public String go(@RequestParam(value = "name", defaultValue = "World") String name) {
 		String url = String.format("http://%s/greeting?name=%s", properties.getHost(), name);
-		ResponseEntity<Greeting> response = client.getForEntity(url, Greeting.class);
-		return response.getBody().getContent();
+		Greeting greeting = client.getForObject(url, Greeting.class);
+		return greeting.getContent();
 	}
 }
