@@ -37,10 +37,6 @@
             <groupId>org.jboss.sb-test</groupId>
             <artifactId>sb-test-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.jboss.sb-test</groupId>
-            <artifactId>sb-test-wingtips</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,6 +50,32 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- OpenTracing Java Agent rule dependencies -->
+        <dependency>
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-agent-rules-java-net</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-agent-rules-java-web-servlet-filter</artifactId>
+        </dependency>
+
+        <!-- OpenTracing Framework Integration dependencies -->
+        <dependency>
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-web-servlet-filter</artifactId>
+        </dependency>
+
+        <!-- OpenTracing compliant Tracer dependencies -->
+        <dependency>
+            <groupId>org.hawkular.apm</groupId>
+            <artifactId>hawkular-apm-client-opentracing</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hawkular.apm</groupId>
+            <artifactId>hawkular-apm-trace-publisher-rest-client</artifactId>
         </dependency>
 
         <!-- Testing -->

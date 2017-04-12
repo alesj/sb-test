@@ -38,7 +38,11 @@
 
         <fabric8.version>2.2.205</fabric8.version>
         <springboot.version>1.4.1.RELEASE</springboot.version>
-        <wingtips.version>0.11.2</wingtips.version>
+        <opentracing.agent.version>0.0.11</opentracing.agent.version>
+        <opentracing.servlet.version>0.0.4</opentracing.servlet.version>
+        <opentracing.version>0.0.11</opentracing.version>
+        <hawkular.version>0.14.4.Final</hawkular.version>
+        <opentracing-agent.lib>${project.build.directory}/lib</opentracing-agent.lib>
 
         <fabric8.maven.plugin.version>3.1.92</fabric8.maven.plugin.version>
         <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
@@ -48,7 +52,6 @@
         <module>common</module>
         <module>service</module>
         <module>ui</module>
-        <module>wingtips</module>
     </modules>
 
     <build>
@@ -76,6 +79,31 @@
                     <skipTests>true</skipTests>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>get-agent</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>io.opentracing.contrib</groupId>
+                                    <artifactId>opentracing-agent</artifactId>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${opentracing-agent.lib}</outputDirectory>
+                                    <destFileName>opentracing-agent.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -101,14 +129,41 @@
             </dependency>
 
             <dependency>
-                <groupId>com.nike.wingtips</groupId>
-                <artifactId>wingtips-servlet-api</artifactId>
-                <version>${wingtips.version}</version>
+                <groupId>io.opentracing.contrib</groupId>
+                <artifactId>opentracing-agent</artifactId>
+                <scope>provided</scope>
+                <version>${opentracing.version}</version>
+            </dependency>
+
+            <!-- OpenTracing Java Agent rule dependencies -->
+            <dependency>
+                <groupId>io.opentracing.contrib</groupId>
+                <artifactId>opentracing-agent-rules-java-net</artifactId>
+                <version>${opentracing.agent.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.nike.wingtips</groupId>
-                <artifactId>wingtips-zipkin</artifactId>
-                <version>${wingtips.version}</version>
+                <groupId>io.opentracing.contrib</groupId>
+                <artifactId>opentracing-agent-rules-java-web-servlet-filter</artifactId>
+                <version>${opentracing.agent.version}</version>
+            </dependency>
+
+            <!-- OpenTracing Framework Integration dependencies -->
+            <dependency>
+                <groupId>io.opentracing.contrib</groupId>
+                <artifactId>opentracing-web-servlet-filter</artifactId>
+                <version>${opentracing.servlet.version}</version>
+            </dependency>
+
+            <!-- OpenTracing compliant Tracer dependencies -->
+            <dependency>
+                <groupId>org.hawkular.apm</groupId>
+                <artifactId>hawkular-apm-client-opentracing</artifactId>
+                <version>${hawkular.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hawkular.apm</groupId>
+                <artifactId>hawkular-apm-trace-publisher-rest-client</artifactId>
+                <version>${hawkular.version}</version>
             </dependency>
 
             <dependency>
