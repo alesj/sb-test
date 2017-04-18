@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016-2017 Red Hat, Inc, and individual contributors.
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +15,21 @@
  */
 package org.jboss.sbtest;
 
+import io.opentracing.Tracer;
+import io.opentracing.contrib.global.GlobalTracer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceApplication.class, args);
+	}
+
+	@Bean
+	public Tracer createTracer() {
+		return GlobalTracer.get();
 	}
 }
