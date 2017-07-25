@@ -25,15 +25,35 @@ public class MsgListener {
     @Autowired
     MessagingSpanTextMapExtractor msgExtractor;
 
-    @JmsListener(destination = "fooQueue")
-    public void processMessage(Message msg) {
-        SpanTextMap carrier = MessageSpanTextMapAdapter.convert(msg);
-        Span span = msgExtractor.joinTrace(carrier);
-        Span continuedSpan = tracer.continueSpan(span);
+    @JmsListener(destination = "fooQueue") // TODO -- to @Aspect
+    public void processMessage(Message msg) throws Exception {
+        Span span = createSpan(msg, "jms:" + msg.getJMSDestination());
         try {
             log.info("Received msg: " + msg.toString());
         } finally {
-            tracer.close(continuedSpan);
+            closeSpans(span);
+        }
+    }
+
+    private Span createSpan(Message message, String name) {
+        SpanTextMap carrier = MessageSpanTextMapAdapter.convert(message);
+        Span parent = msgExtractor.joinTrace(carrier);
+        Span result;
+        if (parent != null) {
+            result = tracer.createSpan(name, parent);
+            if (parent.isRemote()) {
+                result.logEvent(Span.SERVER_RECV);
+            }
+        } else {
+            result = tracer.createSpan(name);
+            result.logEvent(Span.SERVER_RECV);
+        }
+        return result;
+    }
+
+    private void closeSpans(Span span) {
+        if (span != null) {
+            tracer.close(span);
         }
     }
 }

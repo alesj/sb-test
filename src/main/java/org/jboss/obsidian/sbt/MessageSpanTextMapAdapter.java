@@ -8,6 +8,7 @@ import javax.jms.Message;
 
 import org.springframework.cloud.sleuth.SpanTextMap;
 import org.springframework.jms.support.SimpleJmsHeaderMapper;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.messaging.support.MessageHeaderAccessor;
@@ -17,8 +18,8 @@ import org.springframework.util.StringUtils;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class MessageSpanTextMapAdapter {
-    static SpanTextMap convert(Message msg) {
+class MessageSpanTextMapAdapter {
+    static MessagingTextMap convert(Message msg) {
         SimpleJmsHeaderMapper mapper = new SimpleJmsHeaderMapper();
         org.springframework.messaging.Message<Message> springMsg = new GenericMessage<>(msg, mapper.toHeaders(msg));
         MessageBuilder<Message> delegate = MessageBuilder.fromMessage(springMsg);
@@ -29,14 +30,17 @@ public class MessageSpanTextMapAdapter {
 
         private final MessageBuilder delegate;
 
-        public MessagingTextMap(MessageBuilder delegate) {
+        MessagingTextMap(MessageBuilder delegate) {
             this.delegate = delegate;
+        }
+
+        MessageHeaders getMessageHeaders() {
+            return delegate.build().getHeaders();
         }
 
         public Iterator<Map.Entry<String, String>> iterator() {
             Map<String, String> map = new HashMap<>();
-            for (Map.Entry<String, Object> entry : this.delegate.build().getHeaders()
-                .entrySet()) {
+            for (Map.Entry<String, Object> entry : delegate.build().getHeaders().entrySet()) {
                 map.put(entry.getKey(), String.valueOf(entry.getValue()));
             }
             return map.entrySet().iterator();
@@ -47,14 +51,14 @@ public class MessageSpanTextMapAdapter {
             if (!StringUtils.hasText(value)) {
                 return;
             }
-            org.springframework.messaging.Message<?> initialMessage = this.delegate.build();
+            org.springframework.messaging.Message<?> initialMessage = delegate.build();
             MessageHeaderAccessor accessor = MessageHeaderAccessor.getMutableAccessor(initialMessage);
             accessor.setHeader(key, value);
             if (accessor instanceof NativeMessageHeaderAccessor) {
                 NativeMessageHeaderAccessor nativeAccessor = (NativeMessageHeaderAccessor) accessor;
                 nativeAccessor.setNativeHeader(key, value);
             }
-            this.delegate.copyHeaders(accessor.toMessageHeaders());
+            delegate.copyHeaders(accessor.toMessageHeaders());
         }
     }
 
