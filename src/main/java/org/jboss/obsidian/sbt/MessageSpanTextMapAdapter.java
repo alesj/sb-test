@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.jms.Message;
 
-import org.springframework.cloud.sleuth.SpanTextMap;
+import io.opentracing.propagation.TextMap;
 import org.springframework.jms.support.SimpleJmsHeaderMapper;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.GenericMessage;
@@ -26,7 +26,7 @@ class MessageSpanTextMapAdapter {
         return new MessagingTextMap(delegate);
     }
 
-    static class MessagingTextMap implements SpanTextMap {
+    static class MessagingTextMap implements TextMap {
 
         private final MessageBuilder delegate;
 

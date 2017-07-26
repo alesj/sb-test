@@ -5,9 +5,10 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 
+import io.opentracing.ActiveSpan;
+import io.opentracing.Tracer;
+import io.opentracing.propagation.Format;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.sleuth.Tracer;
-import org.springframework.cloud.sleuth.instrument.messaging.MessagingSpanTextMapInjector;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.SimpleJmsHeaderMapper;
 import org.springframework.stereotype.Component;
@@ -18,19 +19,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class SleuthJmsTemplate extends JmsTemplate {
     private Tracer tracer;
-    private MessagingSpanTextMapInjector msgInjector;
 
     @Autowired
-    public SleuthJmsTemplate(ConnectionFactory connectionFactory, Tracer tracer, MessagingSpanTextMapInjector msgInjector) {
+    public SleuthJmsTemplate(ConnectionFactory connectionFactory, Tracer tracer) {
         super(connectionFactory);
         this.tracer = tracer;
-        this.msgInjector = msgInjector;
     }
 
     @Override
     protected void doSend(MessageProducer producer, Message message) throws JMSException {
         MessageSpanTextMapAdapter.MessagingTextMap carrier = MessageSpanTextMapAdapter.convert(message);
-        msgInjector.inject(tracer.getCurrentSpan(), carrier);
+        ActiveSpan span = tracer.activeSpan();
+        tracer.inject(span.context(), Format.Builtin.TEXT_MAP, carrier);
         SimpleJmsHeaderMapper mapper = new SimpleJmsHeaderMapper();
         mapper.fromHeaders(carrier.getMessageHeaders(), message);
         super.doSend(producer, message);

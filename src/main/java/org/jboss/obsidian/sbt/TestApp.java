@@ -1,5 +1,9 @@
 package org.jboss.obsidian.sbt;
 
+import io.opentracing.Tracer;
+import io.opentracing.mock.MockSpan;
+import io.opentracing.mock.MockTracer;
+import io.opentracing.util.ThreadLocalActiveSpanSource;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -23,5 +27,15 @@ public class TestApp {
     @Bean
     public JmsListenerAspect createJmsListenerAspect() {
         return new JmsListenerAspect();
+    }
+
+    @Bean
+    public Tracer createTracer() {
+        return new MockTracer(new ThreadLocalActiveSpanSource(), MockTracer.Propagator.TEXT_MAP) {
+            @Override
+            protected void onSpanFinished(MockSpan mockSpan) {
+                System.out.println(mockSpan);
+            }
+        };
     }
 }
