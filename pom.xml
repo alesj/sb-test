@@ -23,8 +23,9 @@
         <tomcat.version>8.0.36</tomcat.version>
         <keycloak.version>1.9.8.Final</keycloak.version>
       <version.io.opentracing>0.30.0</version.io.opentracing>
-      <version.io.opentracing.contrib-opentracing-spring-web>0.0.6
-      </version.io.opentracing.contrib-opentracing-spring-web>
+      <version.io.opentracing.contrib-opentracing-spring-web>0.0.6</version.io.opentracing.contrib-opentracing-spring-web>
+      <version.io.opentracing.brave>0.20.0</version.io.opentracing.brave>
+      <version.zipkin.reporter>1.0.0</version.zipkin.reporter>
     </properties>
 
     <dependencyManagement>
@@ -62,6 +63,17 @@
             <groupId>io.opentracing.contrib</groupId>
             <artifactId>opentracing-spring-web-autoconfigure</artifactId>
             <version>${version.io.opentracing.contrib-opentracing-spring-web}</version>
+          </dependency>
+
+          <dependency>
+            <groupId>io.opentracing.brave</groupId>
+            <artifactId>brave-opentracing</artifactId>
+            <version>${version.io.opentracing.brave}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.zipkin.reporter</groupId>
+            <artifactId>zipkin-sender-okhttp3</artifactId>
+            <version>${version.zipkin.reporter}</version>
           </dependency>
 
         </dependencies>
@@ -108,6 +120,15 @@
       <dependency>
         <groupId>io.opentracing.contrib</groupId>
         <artifactId>opentracing-spring-web-autoconfigure</artifactId>
+      </dependency>
+
+      <dependency>
+        <groupId>io.opentracing.brave</groupId>
+        <artifactId>brave-opentracing</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>io.zipkin.reporter</groupId>
+        <artifactId>zipkin-sender-okhttp3</artifactId>
       </dependency>
 
         <!-- Tomcat -->
