@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.jms.Message;
 
 import io.opentracing.propagation.TextMap;
-import org.springframework.jms.support.SimpleJmsHeaderMapper;
+import org.springframework.jms.support.JmsHeaderMapper;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
@@ -19,8 +19,7 @@ import org.springframework.util.StringUtils;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 class MessageSpanTextMapAdapter {
-    static MessagingTextMap convert(Message msg) {
-        SimpleJmsHeaderMapper mapper = new SimpleJmsHeaderMapper();
+  static MessagingTextMap convert(JmsHeaderMapper mapper, Message msg) {
         org.springframework.messaging.Message<Message> springMsg = new GenericMessage<>(msg, mapper.toHeaders(msg));
         MessageBuilder<Message> delegate = MessageBuilder.fromMessage(springMsg);
         return new MessagingTextMap(delegate);

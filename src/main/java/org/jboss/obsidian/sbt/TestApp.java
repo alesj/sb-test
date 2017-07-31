@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jms.support.JmsHeaderMapper;
 import zipkin.Span;
 import zipkin.reporter.AsyncReporter;
 import zipkin.reporter.Sender;
@@ -37,6 +38,11 @@ public class TestApp {
         return new JmsTemplateAspect();
     }
 */
+
+  @Bean
+  public JmsHeaderMapper mapper() {
+    return TracingJmsHeaderMapper.braveHeaderMapper();
+  }
 
     @Bean
     public JmsListenerAspect createJmsListenerAspect() {
