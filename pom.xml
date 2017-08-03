@@ -23,9 +23,10 @@
         <tomcat.version>8.0.36</tomcat.version>
         <keycloak.version>1.9.8.Final</keycloak.version>
       <version.io.opentracing>0.30.0</version.io.opentracing>
+      <version.io.opentracing.contrib-opentracing-spring-cloud>0.0.1-SNAPSHOT
+      </version.io.opentracing.contrib-opentracing-spring-cloud>
       <version.io.opentracing.contrib-opentracing-spring-web>0.0.6</version.io.opentracing.contrib-opentracing-spring-web>
-      <version.io.opentracing.brave>0.21.0</version.io.opentracing.brave>
-      <version.zipkin.reporter>1.0.0</version.zipkin.reporter>
+      <version.jaeger>0.20.6</version.jaeger>
     </properties>
 
     <dependencyManagement>
@@ -43,20 +44,11 @@
             <artifactId>opentracing-api</artifactId>
             <version>${version.io.opentracing}</version>
           </dependency>
+
           <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-noop</artifactId>
-            <version>${version.io.opentracing}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-mock</artifactId>
-            <version>${version.io.opentracing}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-util</artifactId>
-            <version>${version.io.opentracing}</version>
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-spring-cloud</artifactId>
+            <version>${version.io.opentracing.contrib-opentracing-spring-cloud}</version>
           </dependency>
 
           <dependency>
@@ -66,14 +58,9 @@
           </dependency>
 
           <dependency>
-            <groupId>io.opentracing.brave</groupId>
-            <artifactId>brave-opentracing</artifactId>
-            <version>${version.io.opentracing.brave}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.zipkin.reporter</groupId>
-            <artifactId>zipkin-sender-okhttp3</artifactId>
-            <version>${version.zipkin.reporter}</version>
+            <groupId>com.uber.jaeger</groupId>
+            <artifactId>jaeger-core</artifactId>
+            <version>${version.jaeger}</version>
           </dependency>
 
         </dependencies>
@@ -104,31 +91,19 @@
         <groupId>io.opentracing</groupId>
         <artifactId>opentracing-api</artifactId>
       </dependency>
-      <dependency>
-        <groupId>io.opentracing</groupId>
-        <artifactId>opentracing-noop</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>io.opentracing</groupId>
-        <artifactId>opentracing-mock</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>io.opentracing</groupId>
-        <artifactId>opentracing-util</artifactId>
-      </dependency>
 
+      <dependency>
+        <groupId>io.opentracing.contrib</groupId>
+        <artifactId>opentracing-spring-cloud</artifactId>
+      </dependency>
       <dependency>
         <groupId>io.opentracing.contrib</groupId>
         <artifactId>opentracing-spring-web-autoconfigure</artifactId>
       </dependency>
 
       <dependency>
-        <groupId>io.opentracing.brave</groupId>
-        <artifactId>brave-opentracing</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>io.zipkin.reporter</groupId>
-        <artifactId>zipkin-sender-okhttp3</artifactId>
+        <groupId>com.uber.jaeger</groupId>
+        <artifactId>jaeger-core</artifactId>
       </dependency>
 
         <!-- Tomcat -->
