@@ -24,7 +24,7 @@
         <keycloak.version>1.9.8.Final</keycloak.version>
       <version.io.opentracing>0.30.0</version.io.opentracing>
       <version.io.opentracing.contrib-opentracing-spring-web>0.0.6</version.io.opentracing.contrib-opentracing-spring-web>
-      <version.io.opentracing.brave>0.21.0-SNAPSHOT</version.io.opentracing.brave>
+      <version.io.opentracing.brave>0.21.0</version.io.opentracing.brave>
       <version.zipkin.reporter>1.0.0</version.zipkin.reporter>
     </properties>
 
