@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.jboss</groupId>
@@ -10,184 +10,159 @@
   </parent>
 
   <groupId>org.jboss.obsidian</groupId>
-    <artifactId>sb-test</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+  <artifactId>sb-test</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
-    <name>SB test</name>
-    <description>Test project for Spring Boot</description>
+  <name>SB test</name>
+  <description>Test project for Spring Boot</description>
 
-    <properties>
-        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
-        <springboot.version>1.4.2.RELEASE</springboot.version>
-        <tomcat.version>8.0.36</tomcat.version>
-        <keycloak.version>1.9.8.Final</keycloak.version>
-      <version.io.opentracing>0.30.0</version.io.opentracing>
-      <version.io.opentracing.contrib-opentracing-spring-cloud>0.0.1-SNAPSHOT
-      </version.io.opentracing.contrib-opentracing-spring-cloud>
-      <version.io.opentracing.contrib-opentracing-spring-web>0.0.6</version.io.opentracing.contrib-opentracing-spring-web>
-      <version.jaeger>0.20.6</version.jaeger>
-    </properties>
+  <properties>
+    <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+    <springboot.version>1.4.2.RELEASE</springboot.version>
+    <tomcat.version>8.0.36</tomcat.version>
+    <version.hibernate.search>5.7.1.Final</version.hibernate.search>
+  </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-parent</artifactId>
-                <version>${springboot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-          <dependency>
-            <groupId>io.opentracing</groupId>
-            <artifactId>opentracing-api</artifactId>
-            <version>${version.io.opentracing}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.opentracing.contrib</groupId>
-            <artifactId>opentracing-spring-cloud</artifactId>
-            <version>${version.io.opentracing.contrib-opentracing-spring-cloud}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.opentracing.contrib</groupId>
-            <artifactId>opentracing-spring-web-autoconfigure</artifactId>
-            <version>${version.io.opentracing.contrib-opentracing-spring-web}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>com.uber.jaeger</groupId>
-            <artifactId>jaeger-core</artifactId>
-            <version>${version.jaeger}</version>
-          </dependency>
-
-        </dependencies>
-    </dependencyManagement>
-
+  <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-loader</artifactId>
-            <scope>provided</scope>
-        </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-aop</artifactId>
-      </dependency>
-
-      <!-- OT -->
-
-      <dependency>
-        <groupId>io.opentracing</groupId>
-        <artifactId>opentracing-api</artifactId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>${springboot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <dependency>
-        <groupId>io.opentracing.contrib</groupId>
-        <artifactId>opentracing-spring-cloud</artifactId>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-search-orm</artifactId>
+        <version>${version.hibernate.search}</version>
       </dependency>
-      <dependency>
-        <groupId>io.opentracing.contrib</groupId>
-        <artifactId>opentracing-spring-web-autoconfigure</artifactId>
-      </dependency>
-
-      <dependency>
-        <groupId>com.uber.jaeger</groupId>
-        <artifactId>jaeger-core</artifactId>
-      </dependency>
-
-        <!-- Tomcat -->
-
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-el</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-websocket</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-
-        <!-- Required to avoid this class not found error
-        Caused by: java.lang.NoClassDefFoundError: org/apache/juli/logging/LogFactory
-            at org.apache.catalina.util.LifecycleBase.<clinit>(LifecycleBase.java:37)
-            at org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory.getEmbeddedServletContainer(TomcatEmbeddedServletContainerFactory.java:167)
-            at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.createEmbeddedServletContainer(EmbeddedWebApplicationContext.java:164)
-            at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:134)
-        -->
-
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-juli</artifactId>
-            <version>${tomcat.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-artemis</artifactId>
-        </dependency>
-
-        <!-- Testing -->
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
 
     </dependencies>
+  </dependencyManagement>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${springboot.version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-loader</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
 
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <!-- executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions -->
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <inherited>true</inherited>
-                <!-- configuration>
-                    <excludes>
-                        <exclude>${test.to.exclude}</exclude>
-                    </excludes>
-                </configuration -->
-            </plugin>
-        </plugins>
-    </build>
+    <!-- OT -->
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <!-- Maven artifact identifier for Hibernate Search -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-search-orm</artifactId>
+    </dependency>
+
+    <!-- Optional: to use JPA 2.1 -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+    </dependency>
+
+    <!-- Tomcat -->
+
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-el</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-websocket</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+
+    <!-- Required to avoid this class not found error
+    Caused by: java.lang.NoClassDefFoundError: org/apache/juli/logging/LogFactory
+        at org.apache.catalina.util.LifecycleBase.<clinit>(LifecycleBase.java:37)
+        at org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory.getEmbeddedServletContainer(TomcatEmbeddedServletContainerFactory.java:167)
+        at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.createEmbeddedServletContainer(EmbeddedWebApplicationContext.java:164)
+        at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:134)
+    -->
+
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-juli</artifactId>
+      <version>${tomcat.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-artemis</artifactId>
+    </dependency>
+
+    <!-- Testing -->
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${springboot.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <!-- executions>
+            <execution>
+                <goals>
+                    <goal>repackage</goal>
+                </goals>
+            </execution>
+        </executions -->
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+        <inherited>true</inherited>
+        <!-- configuration>
+            <excludes>
+                <exclude>${test.to.exclude}</exclude>
+            </excludes>
+        </configuration -->
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
